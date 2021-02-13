@@ -36,4 +36,4 @@ inclirTemplate("header");
         </div>
     </main>
 
-<?php include "includes/templates/footer.php";?>
+    <?php inclirTemplate("footer");?>

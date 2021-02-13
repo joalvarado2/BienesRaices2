@@ -92,4 +92,4 @@ inclirTemplate("header");
         </article>
     </main>
 
-<?php include "includes/templates/footer.php";?>
+    <?php inclirTemplate("footer");?>

@@ -73,4 +73,4 @@ inclirTemplate("header");
         </form>
     </main>
 
-<?php include "includes/templates/footer.php";?>
+    <?php inclirTemplate("footer");?>

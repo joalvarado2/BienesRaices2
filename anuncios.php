@@ -210,6 +210,5 @@ inclirTemplate("header");
         </div> <!--.contenedor-anuncios-->
     </main>
 
-<?php include "includes/templates/footer.php";?>
-
+    <?php inclirTemplate("footer");?>
     

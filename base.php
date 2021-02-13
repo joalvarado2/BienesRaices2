@@ -7,4 +7,4 @@ inclirTemplate("header");
         <h1>titulo pagina</h1>
     </main>
 
-<?php include "includes/templates/footer.php";?>
+    <?php inclirTemplate("footer");?>
