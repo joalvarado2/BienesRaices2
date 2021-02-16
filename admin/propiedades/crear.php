@@ -3,6 +3,10 @@
 require "../../includes/config/database.php";
 $db = conectarDB();
 
+// arreglo con mensaje de errores
+$errores = [];
+
+// ejecutar el codigo despues de que el usuario envia  el formulario
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     /* echo "<pre>";
     var_dump($_POST);
@@ -16,19 +20,46 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $estacionamiento = $_POST["estacionamiento"];
     $vendedorId = $_POST["vendedor"];
 
-    // Insertar en la base de datos
-    $query = "INSERT INTO propiedades (titulo, precio, descripcion, habitaciones, wc, estacionamiento, vendedorId) VALUES
-    ('$titulo', '$precio', '$descripcion', '$habitaciones', '$wc', '$estacionamiento', '$vendedorId')";
-    
-     echo $query;
-
-    $resultado = mysqli_query($db, $query); // enviando a la base de datos
-
-    if($resultado) {
-        echo "Insertado correctamente";
-    } else {
-        echo "algo anda mal";
+    if(!$titulo) {
+        $errores[] = "Debes añadir un titulo";
     }
+    if(!$precio) {
+        $errores[] = "el precio es Obligatorio";
+    }
+    if( strlen($descripcion) < 50) {
+        $errores[] = "la descripcion es obligatoria y debe contener al menos 50 caracteres";
+    }
+    if(!$habitaciones) {
+        $errores[] = "el numero de habitaciones es obligatorio";
+    }
+    if(!$wc) {
+        $errores[] = "el numero de baños es obligatorio";
+    }
+    if(!$estacionamiento) {
+        $errores[] = "el numero de estacionamiento es obligatorio";
+    }
+    if(!$vendedorId) {
+        $errores[] = "el obligatorio escoger el vendedor con el que realizo la cotizacion";
+    }
+
+    // revisar que  el array de errores este vacio
+    if(empty($errores)) {
+
+        // Insertar en la base de datos
+        $query = "INSERT INTO propiedades (titulo, precio, descripcion, habitaciones, wc, estacionamiento, vendedorId) VALUES
+        ('$titulo', '$precio', '$descripcion', '$habitaciones', '$wc', '$estacionamiento', '$vendedorId')";
+        
+         echo $query;
+    
+        $resultado = mysqli_query($db, $query); // enviando a la base de datos
+    
+        if($resultado) {
+            echo "Insertado correctamente";
+        } else {
+            echo "algo anda mal";
+        }
+    }
+
 }
 
 require "../../includes/funciones.php";
@@ -39,6 +70,12 @@ inclirTemplate("header");
     <h1>Crear</h1>
 
     <a href="/admin" class="boton boton-verde"> Volver</a>
+
+    <?php foreach($errores as $error): ?>
+    <div class="alerta error">
+        <?php echo $error; ?>
+    </div>
+    <?php endforeach; ?>
 
     <form action="" class="formulario" method="POST" action="/admin/propiedades/crear.php">
         <fieldset>
