@@ -20,10 +20,7 @@ $vendedorId = "";
 
 // ejecutar el codigo despues de que el usuario envia  el formulario
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    /* echo "<pre>";
-    var_dump($_POST);
-    echo "</pre>"; */
-
+   
     //mysqli_real_escape_string() --> sataniza el codigo es decir limpia lo que escribe el usuario y no sirve
     $titulo = mysqli_real_escape_string( $db, $_POST["titulo"]);
     $precio = mysqli_real_escape_string( $db, $_POST["precio"]);
@@ -33,6 +30,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $estacionamiento = mysqli_real_escape_string( $db, $_POST["estacionamiento"]);
     $vendedorId = mysqli_real_escape_string( $db, $_POST["vendedor"]);
     $creado =  date("Y/m/d");
+
+    // asignar files hacia una variable
+    $imagen = $_FILES["imagen"];
 
     if (!$titulo) {
         $errores[] = "Debes añadir un titulo";
@@ -54,6 +54,16 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     }
     if (!$vendedorId) {
         $errores[] = "el obligatorio escoger el vendedor con el que realizo la cotizacion";
+    }
+    if (!$imagen["name"] || $imagen["error"]) {
+        $errores[] = "la imagen es obligatoria";
+    }
+
+    // validar por tamaño (100 kb maximo)
+    $medida = 1000 * 100;
+
+    if($imagen["size"] > $medida) {
+        $errores[] = "la imagen es muy pesada supera 100 kb";
     }
 
     // revisar que  el array de errores este vacio
@@ -89,7 +99,7 @@ inclirTemplate("header");
         </div>
     <?php endforeach; ?>
 
-    <form action="" class="formulario" method="POST" action="/admin/propiedades/crear.php">
+    <form action="" class="formulario" method="POST" action="/admin/propiedades/crear.php" enctype="multipart/form-data">
         <fieldset>
             <legend>Información General</legend>
 
@@ -100,7 +110,7 @@ inclirTemplate("header");
             <input type="number" id="precio" placeholder="Precio Propiedad" name="precio" value="<?php echo $precio; ?>">
 
             <label for="imagen">Imagen</label>
-            <input type="file" id="imagen" accept="image/png, image/jpeg">
+            <input type="file" id="imagen" accept="image/png, image/jpeg" name="imagen">
 
             <label for="descripcion">Descripcion</label>
             <textarea name="descripcion" id="descripcion"> <?php echo $descripcion; ?> </textarea>
